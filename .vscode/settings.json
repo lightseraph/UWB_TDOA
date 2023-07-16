@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.ino": "cpp",
+        "compiler.h": "c",
+        "port.h": "c",
+        "kalman.h": "c"
+    }
+}
