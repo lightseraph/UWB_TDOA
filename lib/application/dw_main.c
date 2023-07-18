@@ -33,7 +33,7 @@ uint8_t UART_RX_BUF[1];
 instanceConfig_t chConfig[2] = {
 	// mode 1 - SW: 2 off 110K ch2
 	{
-		.channelNumber = 2,			  // channel
+		.channelNumber = 5,			  // channel
 		.preambleCode = 4,			  // preambleCode
 		.pulseRepFreq = DWT_PRF_16M,  // prf
 		.dataRate = DWT_BR_110K,	  // datarate
@@ -44,7 +44,7 @@ instanceConfig_t chConfig[2] = {
 	},
 	// mode 2 - SW: 2 on 6.8M ch2
 	{
-		.channelNumber = 2,			 // channel
+		.channelNumber = 5,			 // channel
 		.preambleCode = 4,			 // preambleCode
 		.pulseRepFreq = DWT_PRF_16M, // prf
 		.dataRate = DWT_BR_6M8,		 // datarate
