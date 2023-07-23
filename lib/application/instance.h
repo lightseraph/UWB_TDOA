@@ -17,7 +17,7 @@ extern "C"
 #define E2PROM 0 // 外接EEPROM开关，ULM1默认不焊接，ULM1-LD1无板载
 
 #define MAX_TAG_110K 4 // 110K模式下最大的标签容量
-// #define MAX_TAG_110K      1   //110K模式下最大的标签容量
+#define MAX_TAG_850K 8 // 850K模式下最大的标签容量
 #define MAX_TAG_68M 15 // 6.8M模式下最大的标签容量
 
 #if (DISCOVERY == 0)

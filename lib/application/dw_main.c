@@ -31,18 +31,18 @@ uint8_t UART_RX_BUF[1];
 
 // 默认使用110K，channel2
 instanceConfig_t chConfig[2] = {
-	// mode 1 - SW: 2 off 110K ch2
+	// mode 1 - SW: 2 off 850K ch5
 	{
 		.channelNumber = 5,			  // channel
 		.preambleCode = 4,			  // preambleCode
 		.pulseRepFreq = DWT_PRF_16M,  // prf
-		.dataRate = DWT_BR_110K,	  // datarate
+		.dataRate = DWT_BR_850K,	  // datarate
 		.preambleLen = DWT_PLEN_1024, // preambleLength
 		.pacSize = DWT_PAC32,		  // pacSize
 		.nsSFD = 1,					  // non-standard SFD
-		.sfdTO = (1025 + 64 - 32)	  // SFD timeout
+		.sfdTO = (1025 + 64 - 32)	  // SFD timeout		preamble length + 1 + SFD length – PAC size
 	},
-	// mode 2 - SW: 2 on 6.8M ch2
+	// mode 2 - SW: 2 on 6.8M ch5
 	{
 		.channelNumber = 5,			 // channel
 		.preambleCode = 4,			 // preambleCode
@@ -51,7 +51,7 @@ instanceConfig_t chConfig[2] = {
 		.preambleLen = DWT_PLEN_128, // preambleLength
 		.pacSize = DWT_PAC8,		 // pacSize
 		.nsSFD = 0,					 // non-standard SFD
-		.sfdTO = (129 + 8 - 8)		 // SFD timeout
+		.sfdTO = (129 + 8 - 8)		 // SFD timeout		preamble length + 1 + SFD length – PAC size
 	},
 };
 
@@ -59,13 +59,14 @@ instanceConfig_t chConfig[2] = {
 sfConfig_t sfConfig[2] = {
 // mode 1 - SW: 2 off 110K ch2 4tags 112ms
 #define SLOT_TIME_110K 28
+#define SLOT_TIME_850K 20
 #define SLOT_TIME_6M8 10
 	{
-		.slotDuration_ms = (SLOT_TIME_110K),			 // slot duration in milliseconds (NOTE: the ranging exchange must be able to complete in this time
-		.numSlots = (MAX_TAG_110K),						 // number of slots in the superframe (8 tag slots and 2 used for anchor to anchor ranging),
-		.sfPeriod_ms = (MAX_TAG_110K * SLOT_TIME_110K),	 // in ms => 280ms frame means 3.57 Hz location rate
-		.tagPeriod_ms = (MAX_TAG_110K * SLOT_TIME_110K), // tag period in ms (sleep time + ranging time)
-		.pollTxToFinalTxDly_us = (20000)				 // poll to final delay in microseconds (needs to be adjusted according to lengths of ranging frames)
+		.slotDuration_ms = (SLOT_TIME_850K),			 // slot duration in milliseconds (NOTE: the ranging exchange must be able to complete in this time
+		.numSlots = (MAX_TAG_850K),						 // number of slots in the superframe (8 tag slots and 2 used for anchor to anchor ranging),
+		.sfPeriod_ms = (MAX_TAG_850K * SLOT_TIME_850K),	 // in ms => 280ms frame means 3.57 Hz location rate
+		.tagPeriod_ms = (MAX_TAG_850K * SLOT_TIME_850K), // tag period in ms (sleep time + ranging time)
+		.pollTxToFinalTxDly_us = (8000)					 // poll to final delay in microseconds (needs to be adjusted according to lengths of ranging frames)
 	},
 #if (DISCOVERY == 1)
 	// mode 2 - SW: 2 on
@@ -183,7 +184,7 @@ uint32 inittestapplication(uint8 s1switch)
 	}
 	else
 	{
-		max_tag_num = MAX_TAG_110K;
+		max_tag_num = MAX_TAG_850K;
 	}
 	return devID;
 }
@@ -322,49 +323,63 @@ int dw_main(void)
 			rangeTime = instance_newrangetim() & 0xffffffff;
 
 #if (OLED == 1)
-			if ((s1switch & SWS1_ANC_MODE) == 0) // 在标签上显示测距值
+
+			if (printLCDTWRReports + 1500 <= portGetTickCnt())
 			{
-				if (printLCDTWRReports + 2000 <= portGetTickCnt())
+				// 每1.5S更新一次测距数据
+				if (instance_mode == ANCHOR)
 				{
-					// 每2S更新一次测距数据
-					if (instance_mode == ANCHOR)
+					int b = 0;
+					double rangetotag = instance_get_tagdist(toggle);
+
+					while (((int)(rangetotag * 1000)) == 0)
 					{
-						int b = 0;
-						double rangetotag = instance_get_tagdist(toggle);
+						if (b > (max_tag_num - 1))
+							break;
 
-						while (((int)(rangetotag * 1000)) == 0)
-						{
-							if (b > (max_tag_num - 1))
-								break;
-
-							toggle++;
-							if (toggle >= max_tag_num)
-								toggle = 0;
-
-							rangetotag = instance_get_tagdist(toggle);
-							b++;
-						}
-						sprintf((char *)&lcd_data[0], "A%d-T%d: %3.2f m  ", ancaddr, toggle, rangetotag);
-						LCD_DISPLAY(0, 32, lcd_data);
 						toggle++;
 						if (toggle >= max_tag_num)
 							toggle = 0;
+
+						rangetotag = instance_get_tagdist(toggle);
+						b++;
 					}
-					else if (instance_mode == TAG)
+					sprintf((char *)&lcd_data[0], "A%d-T%d: %3.2f m  ", ancaddr, toggle, rangetotag);
+					LCD_DISPLAY(0, 32, lcd_data);
+					toggle++;
+					if (toggle >= max_tag_num)
+						toggle = 0;
+				}
+				else if (instance_mode == TAG)
+				{
+					int b = 0;
+					double rangetotag = instance_get_idist(toggle);
+
+					while (((int)(rangetotag * 1000)) == 0)
 					{
-#if (DISCOVERY == 1)
-						sprintf((char *)&lcd_data[0], "T%d A%d: %3.2f m", taddr, toggle, instance_get_idist(toggle));
-#else
-						sprintf((char *)&lcd_data[0], "T%d-A%d: %3.2f m  ", tagaddr, toggle, instance_get_idist(toggle));
-#endif
-						LCD_DISPLAY(0, 32, lcd_data);
+						if (b > (MAX_ANCHOR_LIST_SIZE - 1))
+							break;
+
 						toggle++;
 						if (toggle >= MAX_ANCHOR_LIST_SIZE)
 							toggle = 0;
+
+						rangetotag = instance_get_idist(toggle);
+						b++;
 					}
-					printLCDTWRReports = portGetTickCnt();
+#if (DISCOVERY == 1)
+					sprintf((char *)&lcd_data[0], "T%d A%d: %3.2f m", taddr, toggle, instance_get_idist(toggle));
+#else
+					sprintf((char *)&lcd_data[0], "T%d-A%d: %3.2f m  ", tagaddr, toggle, instance_get_idist(toggle));
+#endif
+					LCD_DISPLAY(0, 32, lcd_data);
+					toggle++;
+					if (toggle >= MAX_ANCHOR_LIST_SIZE)
+						toggle = 0;
 				}
+				printLCDTWRReports = portGetTickCnt();
 			}
+
 #endif
 			// 发送串口数据，数据格式和协议参考使用手册
 			l = instance_get_lcount() & 0xFFFF;
