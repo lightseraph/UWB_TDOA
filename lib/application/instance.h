@@ -20,6 +20,27 @@ extern "C"
 #define MAX_TAG_850K 10 // 850K模式下最大的标签容量
 #define MAX_TAG_68M 15  // 6.8M模式下最大的标签容量
 
+/**********4基站空间坐标，单位：米***********/
+#define A0_X (0)
+#define A0_Y (0)
+#define A0_Z (1.32)
+////////////////////////
+#define A1_X (0.6)
+#define A1_Y (10.2)
+#define A1_Z (2.14)
+////////////////////////
+#define A2_X (3.85)
+#define A2_Y (4.15)
+#define A2_Z (1.43)
+////////////////////////
+#define A3_X (2.63)
+#define A3_Y (-0.27)
+#define A3_Z (1.42)
+    //********************************/
+
+#define ANT_DELAY_COMPENSATE (25) // 部署测试时简化延时补偿参数，一个单位大约等于厘米级调整，
+                                  // 测距偏大就增大数值，即增大这个参数可以使测距值减小。米以内的误差建议先以5为步长调整
+
 #if (DISCOVERY == 0)
 #define MAX_TAG_LIST_SIZE (MAX_TAG_68M)
 // #define MAX_TAG_LIST_SIZE				(1)

@@ -64,14 +64,14 @@ instanceConfig_t chConfig[2] = {
 sfConfig_t sfConfig[2] = {
 // mode 1 - SW: 2 off 110K ch2 4tags 112ms
 #define SLOT_TIME_110K 28
-#define SLOT_TIME_850K 20
+#define SLOT_TIME_850K 12
 #define SLOT_TIME_6M8 10
 	{
 		.slotDuration_ms = (SLOT_TIME_850K),			 // slot duration in milliseconds (NOTE: the ranging exchange must be able to complete in this time
 		.numSlots = (MAX_TAG_850K),						 // number of slots in the superframe (8 tag slots and 2 used for anchor to anchor ranging),
 		.sfPeriod_ms = (MAX_TAG_850K * SLOT_TIME_850K),	 // in ms => 280ms frame means 3.57 Hz location rate
 		.tagPeriod_ms = (MAX_TAG_850K * SLOT_TIME_850K), // tag period in ms (sleep time + ranging time)
-		.pollTxToFinalTxDly_us = (10000)				 // poll to final delay in microseconds (needs to be adjusted according to lengths of ranging frames)
+		.pollTxToFinalTxDly_us = (8000)					 // poll to final delay in microseconds (needs to be adjusted according to lengths of ranging frames)
 	},
 #if (DISCOVERY == 1)
 	// mode 2 - SW: 2 on
@@ -95,7 +95,6 @@ sfConfig_t sfConfig[2] = {
 
 	}
 #endif
-
 };
 
 /*
@@ -470,24 +469,24 @@ int dw_main(void)
 					vec3d report;
 					int Range_deca[4];
 					// A0
-					anchorArray[0].x = 0; // anchor0.x uint:m
-					anchorArray[0].y = 0; // anchor0.y uint:m
-					anchorArray[0].z = 2; // anchor0.z uint:m
+					anchorArray[0].x = A0_X; // anchor0.x uint:m
+					anchorArray[0].y = A0_Y; // anchor0.y uint:m
+					anchorArray[0].z = A0_Z; // anchor0.z uint:m
 
 					// A1
-					anchorArray[1].x = 0;
-					anchorArray[1].y = 3;
-					anchorArray[1].z = 2;
+					anchorArray[1].x = A1_X;
+					anchorArray[1].y = A1_Y;
+					anchorArray[1].z = A1_Z;
 
 					// A2
-					anchorArray[2].x = 3.3;
-					anchorArray[2].y = 3;
-					anchorArray[2].z = 2;
+					anchorArray[2].x = A2_X;
+					anchorArray[2].y = A2_Y;
+					anchorArray[2].z = A2_Z;
 
 					// A3
-					anchorArray[3].x = 3.3;
-					anchorArray[3].y = 0;
-					anchorArray[3].z = 2;
+					anchorArray[3].x = A3_X;
+					anchorArray[3].y = A3_Y;
+					anchorArray[3].z = A3_Z;
 
 					if (valid >= 0x07) // 存在3个及以上有效距离值
 					{
@@ -507,17 +506,18 @@ int dw_main(void)
 
 						if (result > 0)
 						{
-							sprintf(Location_char, "LO=(%.2f,%.2f,%.2f)", report.x, report.y, report.z);
+							sprintf(Location_char, "LO=(%.1f, %.1f)", report.x, report.y);
 						}
 						else
 						{
-							sprintf(Location_char, "LO=[NULL,NULL,NULL]");
+							sprintf(Location_char, "LO=[NULL,NULL]");
 						}
 					}
 					else
 					{
-						sprintf(Location_char, "LO=[NULL,NULL,NULL]");
+						sprintf(Location_char, "LO=[NULL,NULL]");
 					}
+					LCD_DISPLAY(0, 16, Location_char);
 				}
 
 				char A0_dis_char[6] = {0};
