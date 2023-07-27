@@ -173,7 +173,7 @@ char SSD1306_Putc(char ch, FontDef_t *Font, SSD1306_COLOR_t color)
 		b = Font->data[(ch - 32) * Font->FontHeight + i];
 		for (j = 0; j < Font->FontWidth; j++)
 		{
-			if ((b << j) & 0x8000)
+			if ((b << j) & 0x80)
 			{
 				SSD1306_DrawPixel(SSD1306.CurrentX + j, (SSD1306.CurrentY + i), (SSD1306_COLOR_t)color);
 			}
@@ -534,7 +534,18 @@ void SSD1306_OFF(void)
 void LCD_DISPLAY(uint16_t x, uint16_t y, char *str)
 {
 	SSD1306_GotoXY(x, y);
-	SSD1306_Puts(str, &Font_8x16, 1);
+	SSD1306_Puts(str, &Font_7x14, 1);
+	SSD1306_UpdateScreen(); // display
+}
+
+void LCD_Title(void)
+{
+	for (uint8_t a = 127; a < 135; a++)
+	{
+		SSD1306_GotoXY((a - 127) * 7, 0);
+		SSD1306_Putc(a, &Font_7x14, 1);
+	}
+	LCD_DISPLAY(60, 0, "RTLS V1");
 	SSD1306_UpdateScreen(); // display
 }
 
