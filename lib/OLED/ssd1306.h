@@ -183,7 +183,7 @@ extern C
 
 	void LCD_DISPLAY(uint16_t x, uint16_t y, char *str);
 
-	void LCD_Title(void);
+	void LCD_Title(char *str);
 
 #ifndef ssd1306_I2C_TIMEOUT
 #define ssd1306_I2C_TIMEOUT 20000

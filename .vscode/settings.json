@@ -5,6 +5,7 @@
         "port.h": "c",
         "kalman.h": "c",
         "ssd1306.h": "c",
-        "usart.h": "c"
+        "usart.h": "c",
+        "tim.h": "c"
     }
 }

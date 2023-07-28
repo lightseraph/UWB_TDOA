@@ -31,7 +31,7 @@ uint8_t instance_mode = ANCHOR;
 
 #define LCD_BUFF_LEN (20)
 char lcd_data[LCD_BUFF_LEN];
-uint8_t max_tag_num = 4;
+uint8_t max_tag_num = 10;
 uint8_t UART_RX_BUF[1];
 
 // 默认使用110K，channel2
@@ -45,7 +45,7 @@ instanceConfig_t chConfig[2] = {
 		.preambleLen = DWT_PLEN_1024, // preambleLength
 		.pacSize = DWT_PAC32,		  // pacSize
 		.nsSFD = 1,					  // non-standard SFD
-		.sfdTO = (1025 + 64 - 32)	  // SFD timeout		preamble length + 1 + SFD length – PAC size
+		.sfdTO = (1025 + 16 - 32)	  // SFD timeout		preamble length + 1 + SFD length – PAC size
 	},
 	// mode 2 - SW: 2 on 6.8M ch5
 	{
@@ -64,14 +64,14 @@ instanceConfig_t chConfig[2] = {
 sfConfig_t sfConfig[2] = {
 // mode 1 - SW: 2 off 110K ch2 4tags 112ms
 #define SLOT_TIME_110K 28
-#define SLOT_TIME_850K 15
+#define SLOT_TIME_850K 12
 #define SLOT_TIME_6M8 10
 	{
 		.slotDuration_ms = (SLOT_TIME_850K),			 // slot duration in milliseconds (NOTE: the ranging exchange must be able to complete in this time
 		.numSlots = (MAX_TAG_850K),						 // number of slots in the superframe (8 tag slots and 2 used for anchor to anchor ranging),
 		.sfPeriod_ms = (MAX_TAG_850K * SLOT_TIME_850K),	 // in ms => 280ms frame means 3.57 Hz location rate
 		.tagPeriod_ms = (MAX_TAG_850K * SLOT_TIME_850K), // tag period in ms (sleep time + ranging time)
-		.pollTxToFinalTxDly_us = (9000)					 // poll to final delay in microseconds (needs to be adjusted according to lengths of ranging frames)
+		.pollTxToFinalTxDly_us = (8000)					 // poll to final delay in microseconds (needs to be adjusted according to lengths of ranging frames)
 	},
 #if (DISCOVERY == 1)
 	// mode 2 - SW: 2 on
