@@ -511,7 +511,7 @@ void rx_ok_cb_anch(const dwt_cb_data_t *rxd)
 				dw_event.typePend = DWT_SIG_RX_PENDING;
 				inst->twrMode = LISTENER;
 				inst->wait4final = 0;
-				float rx_power = instance_getReceivePower();
+				inst->rxPower[0] = instance_getReceivePower();
 				break;
 			}
 		}

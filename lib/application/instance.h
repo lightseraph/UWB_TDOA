@@ -476,7 +476,7 @@ extern "C"
         uint8 monitor;
         uint32 timeofTx;
         uint8 smartPowerEn;
-
+        float rxPower[MAX_ANCHOR_LIST_SIZE];
     } instance_data_t;
 
     extern uint8_t max_tag_num;

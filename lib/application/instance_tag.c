@@ -235,6 +235,8 @@ void rx_ok_cb_tag(const dwt_cb_data_t *rxd)
 		{
 			if (inst->twrMode == INITIATOR)
 			{
+				uint8_t power_index = sourceAddress & 0x03;
+				inst->rxPower[power_index] = instance_getReceivePower();
 				uint8 index;
 				inst->remainingRespToRx--;
 				dw_event.typePend = tag_rx_reenable(sourceAddress, 0);	   // 打开接收机等待下一个基站的resep消息

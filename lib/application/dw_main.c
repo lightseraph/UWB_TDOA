@@ -45,7 +45,7 @@ instanceConfig_t chConfig[2] = {
 		.preambleLen = DWT_PLEN_1024, // preambleLength
 		.pacSize = DWT_PAC32,		  // pacSize
 		.nsSFD = 1,					  // non-standard SFD
-		.sfdTO = (1025 + 16 - 32)	  // SFD timeout		preamble length + 1 + SFD length – PAC size
+		.sfdTO = (1024 + 16 - 32)	  // SFD timeout		preamble length + 1 + SFD length – PAC size
 	},
 	// mode 2 - SW: 2 on 6.8M ch5
 	{
@@ -244,6 +244,7 @@ int dw_main(void)
 	uint8_t UART_TX_DATA[512];
 	uint8_t UART_TX_DATA2[256];
 	char Location_char[30] = {0};
+	char RxPower[20] = {0};
 
 	port_DisableEXT_IRQ();
 
@@ -350,6 +351,8 @@ int dw_main(void)
 					}
 					sprintf((char *)&lcd_data[0], "A%d-T%d: %3.2f m  ", ancaddr, toggle, rangetotag);
 					LCD_DISPLAY(0, 32, lcd_data);
+					sprintf((char *)&RxPower, "T%d: %3.1f dBm   ", toggle, inst->rxPower[0]);
+					LCD_DISPLAY(0, 16, RxPower);
 					toggle++;
 					if (toggle >= max_tag_num)
 						toggle = 0;
@@ -375,8 +378,10 @@ int dw_main(void)
 					sprintf((char *)&lcd_data[0], "T%d A%d: %3.2f m", taddr, toggle, instance_get_idist(toggle));
 #else
 					sprintf((char *)&lcd_data[0], "T%d-A%d: %3.2f m  ", tagaddr, toggle, instance_get_idist(toggle));
+					sprintf((char *)&RxPower[0], "%3.1f dBm     ", inst->rxPower[toggle]);
 #endif
 					LCD_DISPLAY(0, 32, lcd_data);
+					LCD_DISPLAY(52, 48, RxPower);
 					toggle++;
 					if (toggle >= MAX_ANCHOR_LIST_SIZE)
 						toggle = 0;
