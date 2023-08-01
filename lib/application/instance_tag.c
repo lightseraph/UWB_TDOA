@@ -258,6 +258,12 @@ void rx_ok_cb_tag(const dwt_cb_data_t *rxd)
 #endif
 		case RTLS_DEMO_MSG_TAG_POLL:
 		case RTLS_DEMO_MSG_TAG_FINAL:
+		case RTLS_DEMO_MSG_ANCH_CANDIDATE:
+		{
+			inst->candidatePower = instance_getReceivePower();
+			inst->candidateAncAddress = sourceAddress;
+			break;
+		}
 		default:
 			// 忽略其他消息，只处理基站RESP消息
 			{

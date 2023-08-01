@@ -7,6 +7,31 @@
 					"line": 286,
 					"column": 0,
 					"label": "anchor计算slot correct"
+				},
+				{
+					"line": 468,
+					"column": 0,
+					"label": "收到poll消息"
+				}
+			]
+		},
+		{
+			"path": "lib/application/instance_tag.c",
+			"bookmarks": [
+				{
+					"line": 238,
+					"column": 0,
+					"label": "从基站RESP消息中记录接收信号功率"
+				},
+				{
+					"line": 262,
+					"column": 0,
+					"label": "收到候选基站消息"
+				},
+				{
+					"line": 439,
+					"column": 0,
+					"label": "标签组装poll消息"
 				}
 			]
 		}

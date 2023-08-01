@@ -4,10 +4,10 @@
  * 基站TWR程序
  *
  */
-#ifdef __GNUC__
+/* #ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
-#endif
+#endif */
 
 #include "compiler.h"
 #include "port.h"

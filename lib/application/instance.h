@@ -9,6 +9,7 @@ extern "C"
 #include "port.h"
 #include "deca_types.h"
 #include "deca_device_api.h"
+    // #include <stl_list.h>
 
 #define DEEP_SLEEP 0 // 休眠功能，DW1000是否在空闲时进入低功耗休眠，主要在低功耗场景和移植情况下开启
 #define DISCOVERY 0  // DISCOVERY模式开关，设置=1打开，标签将发送blink消息入网
@@ -77,10 +78,11 @@ extern "C"
 #define SIG_RX_UNKNOWN 99 // 接收到未知数据帧Received an unknown frame
 
 // 功能码
-#define RTLS_DEMO_MSG_RNG_INIT (0x71)  // Ranging initiation message
-#define RTLS_DEMO_MSG_TAG_POLL (0x81)  // Tag poll message
-#define RTLS_DEMO_MSG_ANCH_RESP (0x70) // Anchor response to poll
-#define RTLS_DEMO_MSG_TAG_FINAL (0x82) // Tag final massage back to Anchor
+#define RTLS_DEMO_MSG_RNG_INIT (0x71)       // Ranging initiation message
+#define RTLS_DEMO_MSG_TAG_POLL (0x81)       // Tag poll message
+#define RTLS_DEMO_MSG_ANCH_RESP (0x70)      // Anchor response to poll
+#define RTLS_DEMO_MSG_TAG_FINAL (0x82)      // Tag final massage back to Anchor
+#define RTLS_DEMO_MSG_ANCH_CANDIDATE (0x83) // Anchor sent candidate message
 
 // 各种数据帧长度定义
 // absolute length = 17 +
@@ -93,6 +95,7 @@ extern "C"
                                                // Resp0_RxTime(5), Resp1_RxTime(5), Resp2_RxTime(5), Resp3_RxTime(5), Final_TxTime(5), Valid Response Mask (1)
 #define ANCH_FINAL_MSG_LEN (TAG_FINAL_MSG_LEN) // FunctionCode(1), Range Num (1), Poll_TxTime(5),
                                                // Resp0_RxTime(5), Resp1_RxTime(5), Resp2_RxTime(5), Resp3_RxTime(5), Final_TxTime(5), Valid Response Mask (1)
+#define ANCH_CANDIDATE_MSG_LEN 2
 
 #define STANDARD_FRAME_SIZE 127
 
@@ -241,7 +244,7 @@ extern "C"
         TA_TXRESPONSE_SENT_TORX,    // 11
         TA_TXRESPONSE_SENT_APOLLRX, // 12
         TA_TXRESPONSE_SENT_ARESPRX, // 13
-        TA_RX_CANDIDATETX           // 14 - after range period, tag maybe pick a candidate anchor and put it into anchor group
+        TA_RX_WAIT_CANDIDATETX      // 14 - after range period, tag maybe pick a candidate anchor and put it into anchor group
 
     } INST_STATES;
 
@@ -479,7 +482,9 @@ extern "C"
         uint32 timeofTx;
         uint8 smartPowerEn;
         float rxPower[MAX_ANCHOR_LIST_SIZE];
+        float candidatePower;
         uint16 candidateAncAddress;
+        uint8 candidateWeight;
     } instance_data_t;
 
     extern uint8_t max_tag_num;

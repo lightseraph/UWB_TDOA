@@ -4,10 +4,10 @@
  * 主程序入口
  *
  */
-#ifdef __GNUC__
+/* #ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat-overflow="
-#endif
+#endif */
 
 #include "compiler.h"
 #include "port.h"
@@ -64,7 +64,7 @@ instanceConfig_t chConfig[2] = {
 sfConfig_t sfConfig[2] = {
 // mode 1 - SW: 2 off 110K ch2 4tags 112ms
 #define SLOT_TIME_110K 28
-#define SLOT_TIME_850K 14
+#define SLOT_TIME_850K 15
 #define SLOT_TIME_6M8 10
 	{
 		.slotDuration_ms = (SLOT_TIME_850K),			 // slot duration in milliseconds (NOTE: the ranging exchange must be able to complete in this time
