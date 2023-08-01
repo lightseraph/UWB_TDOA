@@ -199,7 +199,8 @@ extern "C"
         TAG,
         ANCHOR,
         ANCHOR_RNG,
-        NUM_MODES
+        NUM_MODES,
+        IDLE_ANCHOR,
     } INST_MODE;
     // Tag = Exchanges DecaRanging messages (Poll-Response-Final) with Anchor and enabling Anchor to calculate the range between the two instances
     // Anchor = see above
@@ -239,7 +240,8 @@ extern "C"
         TA_TXRESPONSE_SENT_RESPRX,  // 10
         TA_TXRESPONSE_SENT_TORX,    // 11
         TA_TXRESPONSE_SENT_APOLLRX, // 12
-        TA_TXRESPONSE_SENT_ARESPRX  // 13
+        TA_TXRESPONSE_SENT_ARESPRX, // 13
+        TA_RX_CANDIDATETX           // 14 - after range period, tag maybe pick a candidate anchor and put it into anchor group
 
     } INST_STATES;
 
@@ -477,6 +479,7 @@ extern "C"
         uint32 timeofTx;
         uint8 smartPowerEn;
         float rxPower[MAX_ANCHOR_LIST_SIZE];
+        uint16 candidateAncAddress;
     } instance_data_t;
 
     extern uint8_t max_tag_num;

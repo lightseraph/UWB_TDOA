@@ -1,0 +1,14 @@
+{
+	"files": [
+		{
+			"path": "lib/application/instance_anch.c",
+			"bookmarks": [
+				{
+					"line": 286,
+					"column": 0,
+					"label": "anchor计算slot correct"
+				}
+			]
+		}
+	]
+}
