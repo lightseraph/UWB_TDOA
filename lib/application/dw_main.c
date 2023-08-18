@@ -38,14 +38,14 @@ uint8_t UART_RX_BUF[1];
 instanceConfig_t chConfig[2] = {
 	// mode 1 - SW: 2 off 850K ch5
 	{
-		.channelNumber = 5,			  // channel
-		.preambleCode = 4,			  // preambleCode
-		.pulseRepFreq = DWT_PRF_16M,  // prf
-		.dataRate = DWT_BR_850K,	  // datarate
-		.preambleLen = DWT_PLEN_1024, // preambleLength
-		.pacSize = DWT_PAC32,		  // pacSize
-		.nsSFD = 1,					  // non-standard SFD
-		.sfdTO = (1024 + 16 - 32)	  // SFD timeout		preamble length + 1 + SFD length – PAC size
+		.channelNumber = 5,			 // channel
+		.preambleCode = 4,			 // preambleCode
+		.pulseRepFreq = DWT_PRF_16M, // prf
+		.dataRate = DWT_BR_850K,	 // datarate
+		.preambleLen = DWT_PLEN_256, // preambleLength
+		.pacSize = DWT_PAC16,		 // pacSize
+		.nsSFD = 0,					 // non-standard SFD
+		.sfdTO = (257 + 8 - 16)		 // SFD timeout		preamble length + 1 + SFD length – PAC size
 	},
 	// mode 2 - SW: 2 on 6.8M ch5
 	{
@@ -64,14 +64,14 @@ instanceConfig_t chConfig[2] = {
 sfConfig_t sfConfig[2] = {
 // mode 1 - SW: 2 off 110K ch2 4tags 112ms
 #define SLOT_TIME_110K 28
-#define SLOT_TIME_850K 15
+#define SLOT_TIME_850K 20
 #define SLOT_TIME_6M8 10
 	{
 		.slotDuration_ms = (SLOT_TIME_850K),			 // slot duration in milliseconds (NOTE: the ranging exchange must be able to complete in this time
 		.numSlots = (MAX_TAG_850K),						 // number of slots in the superframe (8 tag slots and 2 used for anchor to anchor ranging),
 		.sfPeriod_ms = (MAX_TAG_850K * SLOT_TIME_850K),	 // in ms => 280ms frame means 3.57 Hz location rate
 		.tagPeriod_ms = (MAX_TAG_850K * SLOT_TIME_850K), // tag period in ms (sleep time + ranging time)
-		.pollTxToFinalTxDly_us = (8000)					 // poll to final delay in microseconds (needs to be adjusted according to lengths of ranging frames)
+		.pollTxToFinalTxDly_us = (8500)					 // poll to final delay in microseconds (needs to be adjusted according to lengths of ranging frames)
 	},
 #if (DISCOVERY == 1)
 	// mode 2 - SW: 2 on
