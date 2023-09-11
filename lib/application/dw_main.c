@@ -42,10 +42,10 @@ instanceConfig_t chConfig[2] = {
 		.preambleCode = 4,			 // preambleCode
 		.pulseRepFreq = DWT_PRF_16M, // prf
 		.dataRate = DWT_BR_850K,	 // datarate
-		.preambleLen = DWT_PLEN_256, // preambleLength
+		.preambleLen = DWT_PLEN_512, // preambleLength
 		.pacSize = DWT_PAC16,		 // pacSize
 		.nsSFD = 0,					 // non-standard SFD
-		.sfdTO = (257 + 8 - 16)		 // SFD timeout		preamble length + 1 + SFD length – PAC size
+		.sfdTO = (513 + 8 - 16)		 // SFD timeout		preamble length + 1 + SFD length – PAC size
 	},
 	// mode 2 - SW: 2 on 6.8M ch5
 	{
