@@ -15,7 +15,7 @@
 #include "deca_spi.h"
 #include "deca_regs.h"
 #include "instance.h"
-
+#include "usart.h"
 // ----------------------------------------------------------------------------------------------
 // 函数声明
 // ----------------------------------------------------------------------------------------------
@@ -191,8 +191,10 @@ uint8 anch_txresponse_or_rx_reenable(void)
 		inst->wait4ack = DWT_RESPONSE_EXPECTED; // re has/will be re-enabled
 
 		dwt_setdelayedtrxtime(inst->delayedTRXTime32h);
+
 		if (dwt_starttx(DWT_START_TX_DELAYED | DWT_RESPONSE_EXPECTED))
 		{
+
 			// if TX has failed - we need to re-enable RX for the next response or final reception...
 			dwt_setrxaftertxdelay(0);
 			inst->wait4ack = 0;				  // clear the flag as the TX has failed the TRX is off
@@ -209,6 +211,7 @@ uint8 anch_txresponse_or_rx_reenable(void)
 		}
 		else
 		{
+			// printf("tx delayed:%lu\r\n", inst->delayedTRXTime32h);
 			inst->delayedTRXTime32h += inst->fixedReplyDelayAnc32h; // to take into account W4R
 			typePend = DWT_SIG_TX_PENDING;							// exit this interrupt and notify the application/instance that TX is in progress.
 			inst->timeofTx = portGetTickCnt();
