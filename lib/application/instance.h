@@ -171,7 +171,7 @@ extern "C"
 
 // this it the delay used for configuring the receiver on delay (wait for response delay)
 // NOTE: this RX_RESPONSE_TURNAROUND is dependent on the microprocessor and code optimisations
-#define RX_RESPONSE_TURNAROUND (400) // this takes into account any turnaround/processing time (reporting received poll and sending the response)
+#define RX_RESPONSE_TURNAROUND (300) // this takes into account any turnaround/processing time (reporting received poll and sending the response)
 
 #define PTO_PACS (3) // tag will use PTO to reduce power consumption (if no response coming stop RX)
 
