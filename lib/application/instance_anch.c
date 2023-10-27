@@ -734,7 +734,7 @@ int anch_app_run(instance_data_t *inst)
 			case RTLS_DEMO_MSG_ANCH_RESP:
 			{
 				uint8 currentRangeNum = (messageData[TOFRN] + 1); // currentRangeNum = previous + 1
-
+				printf("currentRangeNum, rangeNum: %d, %d\r\n", currentRangeNum, inst->rangeNum);
 				// the response has been sent - await TX done event
 				if (dw_event->typePend == DWT_SIG_TX_PENDING) // anchor received response from anchor ID - 1 so is sending it's response now back to tag
 				{
